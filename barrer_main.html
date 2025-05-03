@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>BARR`ER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .modal-img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .next {
+            right: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-black font-sans">
+    <!-- Хедер -->
+    <header class="p-6 flex justify-between items-center border-b">
+        <h1 class="text-2xl font-bold">BARR`ER</h1>
+        <nav class="space-x-4">
+            <a href="#catalog" class="hover:underline">Каталог</a>
+            <a href="#about" class="hover:underline">О нас</a>
+            <a href="#contacts" class="hover:underline">Контакты</a>
+        </nav>
+    </header>
+
+    <!-- Главный баннер -->
+    <section class="p-8 text-center">
+        <h2 class="text-4xl font-semibold mb-4">Новая коллекция 2022125</h2>
+        <p class="text-lg">Минимализм. Чёрное. Уличный стиль.</p>
+    </section>
+
+    <!-- Каталог -->
+    <section id="catalog" class="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="border p-4">
+            <!-- Главное фото -->
+            <img src="sample.jpeg" alt="Сумка TSUNO MONKE" class="mb-2 cursor-pointer"
+                onclick="openGallery(['sample.jpeg', 'sample2.jpeg', 'sample3.jpeg'], 0)">
+
+            <h3 class="text-xl font-semibold">Сумка TSUNO MONKE</h3>
+            <p class="text-sm text-gray-500 mb-2">100% хлопок. Oversize.</p>
+            <a href="https://t.me/daniel_eryomin" target="_blank"
+                class="bg-black text-white px-4 py-2 hover:bg-gray-800 transition inline-block text-center">Заказать</a>
+        </div>
+    </section>
+
+    <!-- О нас -->
+    <section id="about" class="p-8 text-center border-t">
+        <h2 class="text-2xl font-semibold mb-2">О бренде</h2>
+        <p>Делаем стильную одежду без лишнего. Только базовая эстетика и чёрный цвет.</p>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contacts" class="p-8 text-center border-t">
+        <h2 class="text-2xl font-semibold mb-2">Контакты</h2>
+        <p>Пиши нам в <a href="https://t.me/daniel_eryomin" class="text-blue-600 hover:underline">Telegram</a> или на <a
+                href="mailto:your@email.com" class="text-blue-600 hover:underline">почту</a>.</p>
+    </section>
+
+    <!-- Футер -->
+    <footer class="p-6 text-center border-t text-sm text-gray-500">
+        © 2025 BARR`ER. BE FRESH.
+    </footer>
+
+    <!-- Модальное окно галереи -->
+    <div id="galleryModal" class="modal">
+        <span class="close" onclick="closeGallery()">&times;</span>
+        <span class="prev" onclick="plusSlides(-1)">&#10094;</span>
+        <span class="next" onclick="plusSlides(1)">&#10095;</span>
+        <div class="modal-content">
+            <img class="modal-img" id="modalImage">
+        </div>
+    </div>
+
+    <script>
+        let currentGallery = [];
+        let currentIndex = 0;
+
+        function openGallery(images, index) {
+            currentGallery = images;
+            currentIndex = index;
+            document.getElementById('galleryModal').style.display = "block";
+            document.getElementById('modalImage').src = images[index];
+            document.body.style.overflow = "hidden"; // Блокируем прокрутку страницы
+        }
+
+        function closeGallery() {
+            document.getElementById('galleryModal').style.display = "none";
+            document.body.style.overflow = "auto"; // Возвращаем прокрутку
+        }
+
+        function plusSlides(n) {
+            currentIndex += n;
+            if (currentIndex >= currentGallery.length) {
+                currentIndex = 0;
+            } else if (currentIndex < 0) {
+                currentIndex = currentGallery.length - 1;
+            }
+            document.getElementById('modalImage').src = currentGallery[currentIndex];
+        }
+
+        // Закрытие по клику вне изображения
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('galleryModal')) {
+                closeGallery();
+            }
+        }
+
+        // Добавляем параметр версии для борьбы с кэшированием
+        const version = new Date().getTime(); // уникальное число каждый раз
+
+        function openGallery(images, index) {
+            // Добавляем параметр версии к каждому изображению
+            const uncachedImages = images.map(img => `${img}?v=${version}`);
+            currentGallery = uncachedImages;
+            currentIndex = index;
+            document.getElementById('modalImage').src = uncachedImages[index];
+            document.getElementById('galleryModal').style.display = "block";
+        }
+        // Остальной код без изменений
+    </script>
+</body>
+
+</html>
